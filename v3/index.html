@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Typing Game | Version 03</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #25204a 0%,
+                    #11111f 45%,
+                    #080810 100%
+                );
+
+            color: white;
+
+            font-family:
+                "Segoe UI",
+                "Microsoft JhengHei",
+                sans-serif;
+
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .version {
+            color: #8f8cff;
+            font-size: 14px;
+            letter-spacing: 4px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 42px;
+        }
+
+        .subtitle {
+            color: #aaa9bd;
+            margin-top: 12px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.06);
+
+            border: 1px solid rgba(143, 140, 255, 0.25);
+            border-radius: 20px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 0 40px rgba(104, 92, 255, 0.12),
+                inset 0 0 30px rgba(255, 255, 255, 0.02);
+        }
+
+        .score-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .score-label {
+            color: #aaa9bd;
+            font-size: 14px;
+        }
+
+        .score {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .target-area {
+            text-align: center;
+            margin: 25px 0 35px;
+        }
+
+        .target-label {
+            color: #aaa9bd;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .target {
+            font-size: 90px;
+            font-weight: bold;
+
+            color: #8f8cff;
+
+            text-shadow:
+                0 0 20px rgba(143, 140, 255, 0.6);
+        }
+
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+
+            max-width: 650px;
+            margin: 0 auto 30px;
+        }
+
+        .key {
+            height: 90px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: rgba(255, 255, 255, 0.07);
+
+            border: 1px solid rgba(143, 140, 255, 0.3);
+            border-radius: 14px;
+
+            color: #ffffff;
+
+            font-size: 30px;
+            font-weight: bold;
+
+            transition:
+                background 0.15s ease,
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+
+        .key.active {
+            background: linear-gradient(
+                135deg,
+                #7c6cff,
+                #a66cff
+            );
+
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 0 25px rgba(124, 108, 255, 0.65);
+        }
+
+        .status {
+            text-align: center;
+            color: #aaa9bd;
+
+            min-height: 24px;
+            margin-bottom: 25px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+
+            padding: 12px 25px;
+
+            font-size: 15px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .start-btn {
+            background: linear-gradient(
+                135deg,
+                #7c6cff,
+                #a66cff
+            );
+
+            color: white;
+
+            box-shadow:
+                0 0 18px rgba(124, 108, 255, 0.3);
+        }
+
+        .stop-btn {
+            background: rgba(255, 255, 255, 0.08);
+
+            border: 1px solid rgba(255, 255, 255, 0.15);
+
+            color: #ccccd8;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .back {
+            display: block;
+
+            width: fit-content;
+            margin: 30px auto 0;
+
+            color: #8f8cff;
+            text-decoration: none;
+
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+
+            color: #666579;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+
+            .game-card {
+                padding: 25px 18px;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .target {
+                font-size: 70px;
+            }
+
+            .key {
+                height: 70px;
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header class="header">
+
+            <div class="version">
+                TYPING GAME · VERSION 03
+            </div>
+
+            <h1>ASDF 英打挑戰</h1>
+
+            <p class="subtitle">
+                Follow the target and type the correct key.
+            </p>
+
+        </header>
+
+
+        <main class="game-card">
+
+            <div class="score-area">
+
+                <div>
+                    <div class="score-label">
+                        SCORE
+                    </div>
+
+                    <div class="score" id="score">
+                        0
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="target-area">
+
+                <div class="target-label">
+                    TARGET KEY
+                </div>
+
+                <div class="target" id="target">
+                    -
+                </div>
+
+            </div>
+
+
+            <div class="keyboard">
+
+                <div class="key" data-key="A">
+                    A
+                </div>
+
+                <div class="key" data-key="S">
+                    S
+                </div>
+
+                <div class="key" data-key="D">
+                    D
+                </div>
+
+                <div class="key" data-key="F">
+                    F
+                </div>
+
+            </div>
+
+
+            <div class="status" id="status">
+                按下「開始遊戲」開始挑戰
+            </div>
+
+
+            <div class="buttons">
+
+                <button
+                    class="start-btn"
+                    id="startButton"
+                >
+                    開始遊戲
+                </button>
+
+                <button
+                    class="stop-btn"
+                    id="stopButton"
+                >
+                    停止遊戲
+                </button>
+
+            </div>
+
+        </main>
+
+
+        <a
+            href="../index.html"
+            class="back"
+        >
+            ← 回到開發歷程
+        </a>
+
+
+        <footer>
+            VERSION 03 · 2026
+        </footer>
+
+    </div>
+
+
+    <script>
+
+        const keys = ["A", "S", "D", "F"];
+
+        const targetElement =
+            document.getElementById("target");
+
+        const scoreElement =
+            document.getElementById("score");
+
+        const statusElement =
+            document.getElementById("status");
+
+        const startButton =
+            document.getElementById("startButton");
+
+        const stopButton =
+            document.getElementById("stopButton");
+
+        const keyElements =
+            document.querySelectorAll(".key");
+
+
+        let currentTarget = null;
+        let score = 0;
+        let gameRunning = false;
+
+
+        function chooseTarget() {
+
+            const randomIndex =
+                Math.floor(
+                    Math.random() * keys.length
+                );
+
+            currentTarget =
+                keys[randomIndex];
+
+            targetElement.textContent =
+                currentTarget;
+
+            updateKeyboard();
+
+        }
+
+
+        function updateKeyboard() {
+
+            keyElements.forEach(function (key) {
+
+                key.classList.remove("active");
+
+                if (
+                    key.dataset.key ===
+                    currentTarget
+                ) {
+                    key.classList.add("active");
+                }
+
+            });
+
+        }
+
+
+        function startGame() {
+
+            score = 0;
+
+            scoreElement.textContent =
+                score;
+
+            gameRunning = true;
+
+            statusElement.textContent =
+                "請按下螢幕上亮起的按鍵！";
+
+            chooseTarget();
+
+        }
+
+
+        function stopGame() {
+
+            gameRunning = false;
+
+            currentTarget = null;
+
+            targetElement.textContent = "-";
+
+            keyElements.forEach(function (key) {
+                key.classList.remove("active");
+            });
+
+            statusElement.textContent =
+                "遊戲已停止";
+
+        }
+
+
+        function handleKeyPress(event) {
+
+            if (!gameRunning) {
+                return;
+            }
+
+            const pressedKey =
+                event.key.toUpperCase();
+
+            if (!keys.includes(pressedKey)) {
+                return;
+            }
+
+            if (pressedKey === currentTarget) {
+
+                score++;
+
+                scoreElement.textContent =
+                    score;
+
+                statusElement.textContent =
+                    "答對了！";
+
+                chooseTarget();
+
+            } else {
+
+                statusElement.textContent =
+                    "答錯了，再試一次！";
+
+            }
+
+        }
+
+
+        startButton.addEventListener(
+            "click",
+            startGame
+        );
+
+
+        stopButton.addEventListener(
+            "click",
+            stopGame
+        );
+
+
+        document.addEventListener(
+            "keydown",
+            handleKeyPress
+        );
+
+    </script>
+
+</body>
+</html>
