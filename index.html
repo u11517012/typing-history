@@ -4,85 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Typing Game | Development History</title>
+    <title>Typing Game Development History</title>
 
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
             min-height: 100vh;
-
-            background:
-                radial-gradient(
-                    circle at top,
-                    #25204a 0%,
-                    #11111f 45%,
-                    #080810 100%
-                );
-
+            font-family: Arial, "Noto Sans TC", sans-serif;
             color: #ffffff;
 
-            font-family:
-                "Segoe UI",
-                "Microsoft JhengHei",
-                sans-serif;
+            background:
+                radial-gradient(circle at 20% 20%, #25204a 0%, transparent 35%),
+                radial-gradient(circle at 80% 70%, #201d48 0%, transparent 35%),
+                #080810;
 
-            padding: 60px 20px;
+            padding: 50px 20px;
         }
 
         .container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
-        .header {
+        /* ===== Header ===== */
+
+        header {
             text-align: center;
             margin-bottom: 50px;
         }
 
-        .label {
-            color: #8f8cff;
+        .small-title {
             font-size: 14px;
             letter-spacing: 4px;
+            color: #8f8cff;
             margin-bottom: 15px;
+            text-transform: uppercase;
         }
 
         h1 {
-            margin: 0;
-            font-size: 46px;
-            letter-spacing: 2px;
+            font-size: 42px;
+            margin-bottom: 15px;
+
+            background: linear-gradient(
+                90deg,
+                #ffffff,
+                #a66cff,
+                #8f8cff
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
-            margin-top: 15px;
-            color: #aaa9bd;
+            color: #aaa9c2;
             font-size: 16px;
+            line-height: 1.7;
         }
+
+        /* ===== Timeline ===== */
 
         .timeline {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 24px;
         }
+
+        /* ===== Version Card ===== */
 
         .version-card {
             position: relative;
 
-            min-height: 320px;
             padding: 30px;
 
-            background: rgba(255, 255, 255, 0.06);
+            border-radius: 22px;
+
+            background: rgba(255, 255, 255, 0.05);
 
             border: 1px solid rgba(143, 140, 255, 0.25);
-            border-radius: 20px;
 
             box-shadow:
-                0 0 35px rgba(104, 92, 255, 0.10),
-                inset 0 0 25px rgba(255, 255, 255, 0.02);
+                0 10px 40px rgba(0, 0, 0, 0.35),
+                inset 0 0 30px rgba(143, 140, 255, 0.03);
+
+            backdrop-filter: blur(12px);
 
             transition:
                 transform 0.25s ease,
@@ -93,37 +104,70 @@
         .version-card:hover {
             transform: translateY(-6px);
 
-            border-color: rgba(143, 140, 255, 0.55);
+            border-color: rgba(143, 140, 255, 0.7);
 
             box-shadow:
-                0 0 40px rgba(104, 92, 255, 0.22);
+                0 15px 50px rgba(0, 0, 0, 0.45),
+                0 0 25px rgba(143, 140, 255, 0.12);
         }
+
+        /* ===== Version Number ===== */
 
         .version-number {
-            color: #8f8cff;
+            display: inline-block;
+
+            padding: 7px 14px;
+
+            border-radius: 20px;
+
+            background: rgba(143, 140, 255, 0.12);
+
+            border: 1px solid rgba(143, 140, 255, 0.3);
+
+            color: #a6a3ff;
+
             font-size: 13px;
-            letter-spacing: 3px;
-            margin-bottom: 18px;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 22px;
         }
+
+        /* ===== Card Title ===== */
 
         .version-card h2 {
-            margin: 0 0 15px 0;
-            font-size: 28px;
+            font-size: 25px;
+            margin-bottom: 15px;
         }
 
+        /* ===== Description ===== */
+
         .description {
-            color: #b7b6c8;
+            color: #b8b7ca;
+
+            font-size: 15px;
+
             line-height: 1.8;
+
             min-height: 85px;
+
+            margin-bottom: 25px;
         }
+
+        /* ===== Button ===== */
 
         .card-button {
             display: inline-block;
 
-            margin-top: 20px;
-            padding: 11px 22px;
+            padding: 12px 22px;
 
-            border-radius: 10px;
+            border-radius: 12px;
+
+            text-decoration: none;
+
+            color: #ffffff;
+
+            font-size: 14px;
 
             background: linear-gradient(
                 135deg,
@@ -131,57 +175,72 @@
                 #a66cff
             );
 
-            color: white;
-            text-decoration: none;
-
-            font-size: 14px;
-            font-weight: bold;
-
             box-shadow:
-                0 0 18px rgba(124, 108, 255, 0.25);
+                0 5px 20px rgba(124, 108, 255, 0.25);
 
-            transition: all 0.25s ease;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
         }
 
         .card-button:hover {
             transform: translateY(-2px);
 
             box-shadow:
-                0 0 25px rgba(124, 108, 255, 0.5);
+                0 8px 25px rgba(124, 108, 255, 0.4);
         }
+
+        /* ===== Coming Soon ===== */
 
         .coming-soon {
-            display: inline-block;
-
-            margin-top: 20px;
-            padding: 9px 16px;
-
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-
-            color: #77768a;
-            font-size: 14px;
+            opacity: 0.75;
         }
+
+        .coming-soon .card-button {
+            background: rgba(255, 255, 255, 0.08);
+
+            color: #8f8da5;
+
+            box-shadow: none;
+
+            cursor: default;
+        }
+
+        .coming-soon .card-button:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ===== Footer ===== */
 
         footer {
             text-align: center;
-            margin-top: 50px;
 
-            color: #666579;
+            margin-top: 45px;
+
+            color: #6f6d82;
+
             font-size: 13px;
         }
 
+        /* ===== Mobile ===== */
+
         @media (max-width: 750px) {
+
+            body {
+                padding: 35px 16px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
             .timeline {
                 grid-template-columns: 1fr;
             }
 
-            h1 {
-                font-size: 38px;
-            }
-
             .version-card {
-                min-height: auto;
+                padding: 25px;
             }
         }
     </style>
@@ -191,42 +250,52 @@
 
     <div class="container">
 
-        <header class="header">
+        <!-- ===== Header ===== -->
 
-            <div class="label">
-                TYPING GAME · DEVELOPMENT HISTORY
+        <header>
+
+            <div class="small-title">
+                DIGITAL TECHNOLOGY
             </div>
 
-            <h1>英打遊戲開發歷程</h1>
+            <h1>
+                Typing Game
+            </h1>
 
             <p class="subtitle">
-                From a simple interface to an interactive typing game.
+                我的英打遊戲開發歷程
+                <br>
+                From Version 1 to Version 4
             </p>
 
         </header>
 
 
+        <!-- ===== Version Cards ===== -->
+
         <main class="timeline">
 
             <!-- Version 1 -->
+
             <section class="version-card">
 
                 <div class="version-number">
                     VERSION 01
                 </div>
 
-                <h2>基礎介面</h2>
+                <h2>
+                    英打遊戲初始版本
+                </h2>
 
                 <p class="description">
-                    建立英打遊戲最初的介面，
-                    包含遊戲標題與開始按鈕。
+                    建立英打遊戲的基本網站架構，
+                    加入遊戲標題與開始按鈕，
+                    完成第一個可以操作的遊戲介面。
                 </p>
 
-                <a
-                    href="https://u11517012.github.io/typing-v1/"
-                    class="card-button"
-                    target="_blank"
-                >
+                <a href="https://u11517012.github.io/typing-v1/"
+                   class="card-button"
+                   target="_blank">
                     查看 V1
                 </a>
 
@@ -234,24 +303,26 @@
 
 
             <!-- Version 2 -->
+
             <section class="version-card">
 
                 <div class="version-number">
                     VERSION 02
                 </div>
 
-                <h2>鍵盤與音效</h2>
+                <h2>
+                    鍵盤與音效
+                </h2>
 
                 <p class="description">
                     加入鍵盤圖片與按鈕音效，
-                    讓遊戲介面更加完整。
+                    讓遊戲介面更完整，
+                    並增加操作時的互動效果。
                 </p>
 
-                <a
-                    href="https://u11517012.github.io/typing-v2/"
-                    class="card-button"
-                    target="_blank"
-                >
+                <a href="https://u11517012.github.io/typing-v2/"
+                   class="card-button"
+                   target="_blank">
                     查看 V2
                 </a>
 
@@ -259,30 +330,63 @@
 
 
             <!-- Version 3 -->
+
             <section class="version-card">
 
                 <div class="version-number">
                     VERSION 03
                 </div>
 
-                <h2>互動遊戲</h2>
+                <h2>
+                    ASDF 英打挑戰
+                </h2>
 
                 <p class="description">
-                    下一階段將加入真正的英打互動遊戲，
-                    敬請期待。
+                    加入 A、S、D、F 四鍵英打遊戲，
+                    玩家需要依照畫面上的目標按下正確按鍵，
+                    完成簡單的打字挑戰。
                 </p>
 
-               <a href="v3/index.html" class="card-button">
-    開始 V3
-</a>
+                <a href="v3/index.html"
+                   class="card-button">
+                    開始 V3
+                </a>
+
+            </section>
+
+
+            <!-- Version 4 -->
+
+            <section class="version-card">
+
+                <div class="version-number">
+                    VERSION 04
+                </div>
+
+                <h2>
+                    十鍵掉落挑戰
+                </h2>
+
+                <p class="description">
+                    加入十鍵掉落式英打遊戲，
+                    玩家需要在字母掉落到底部前，
+                    按下正確按鍵完成挑戰。
+                </p>
+
+                <a href="v4/index.html"
+                   class="card-button">
+                    開始 V4
+                </a>
 
             </section>
 
         </main>
 
 
+        <!-- ===== Footer ===== -->
+
         <footer>
-            TYPING GAME · DEVELOPMENT HISTORY · 2026
+            Typing Game Development History
         </footer>
 
     </div>
