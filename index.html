@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Typing Game | Development History</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #25204a 0%,
+                    #11111f 45%,
+                    #080810 100%
+                );
+
+            color: #ffffff;
+
+            font-family:
+                "Segoe UI",
+                "Microsoft JhengHei",
+                sans-serif;
+
+            padding: 60px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .label {
+            color: #8f8cff;
+            font-size: 14px;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 46px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            margin-top: 15px;
+            color: #aaa9bd;
+            font-size: 16px;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .version-card {
+            position: relative;
+
+            min-height: 320px;
+            padding: 30px;
+
+            background: rgba(255, 255, 255, 0.06);
+
+            border: 1px solid rgba(143, 140, 255, 0.25);
+            border-radius: 20px;
+
+            box-shadow:
+                0 0 35px rgba(104, 92, 255, 0.10),
+                inset 0 0 25px rgba(255, 255, 255, 0.02);
+
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .version-card:hover {
+            transform: translateY(-6px);
+
+            border-color: rgba(143, 140, 255, 0.55);
+
+            box-shadow:
+                0 0 40px rgba(104, 92, 255, 0.22);
+        }
+
+        .version-number {
+            color: #8f8cff;
+            font-size: 13px;
+            letter-spacing: 3px;
+            margin-bottom: 18px;
+        }
+
+        .version-card h2 {
+            margin: 0 0 15px 0;
+            font-size: 28px;
+        }
+
+        .description {
+            color: #b7b6c8;
+            line-height: 1.8;
+            min-height: 85px;
+        }
+
+        .card-button {
+            display: inline-block;
+
+            margin-top: 20px;
+            padding: 11px 22px;
+
+            border-radius: 10px;
+
+            background: linear-gradient(
+                135deg,
+                #7c6cff,
+                #a66cff
+            );
+
+            color: white;
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: bold;
+
+            box-shadow:
+                0 0 18px rgba(124, 108, 255, 0.25);
+
+            transition: all 0.25s ease;
+        }
+
+        .card-button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 0 25px rgba(124, 108, 255, 0.5);
+        }
+
+        .coming-soon {
+            display: inline-block;
+
+            margin-top: 20px;
+            padding: 9px 16px;
+
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+
+            color: #77768a;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+
+            color: #666579;
+            font-size: 13px;
+        }
+
+        @media (max-width: 750px) {
+            .timeline {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 38px;
+            }
+
+            .version-card {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header class="header">
+
+            <div class="label">
+                TYPING GAME · DEVELOPMENT HISTORY
+            </div>
+
+            <h1>英打遊戲開發歷程</h1>
+
+            <p class="subtitle">
+                From a simple interface to an interactive typing game.
+            </p>
+
+        </header>
+
+
+        <main class="timeline">
+
+            <!-- Version 1 -->
+            <section class="version-card">
+
+                <div class="version-number">
+                    VERSION 01
+                </div>
+
+                <h2>基礎介面</h2>
+
+                <p class="description">
+                    建立英打遊戲最初的介面，
+                    包含遊戲標題與開始按鈕。
+                </p>
+
+                <a
+                    href="https://u11517012.github.io/typing-v1/"
+                    class="card-button"
+                    target="_blank"
+                >
+                    查看 V1
+                </a>
+
+            </section>
+
+
+            <!-- Version 2 -->
+            <section class="version-card">
+
+                <div class="version-number">
+                    VERSION 02
+                </div>
+
+                <h2>鍵盤與音效</h2>
+
+                <p class="description">
+                    加入鍵盤圖片與按鈕音效，
+                    讓遊戲介面更加完整。
+                </p>
+
+                <a
+                    href="https://u11517012.github.io/typing-v2/"
+                    class="card-button"
+                    target="_blank"
+                >
+                    查看 V2
+                </a>
+
+            </section>
+
+
+            <!-- Version 3 -->
+            <section class="version-card">
+
+                <div class="version-number">
+                    VERSION 03
+                </div>
+
+                <h2>互動遊戲</h2>
+
+                <p class="description">
+                    下一階段將加入真正的英打互動遊戲，
+                    敬請期待。
+                </p>
+
+                <a
+                    href="coming-soon.html"
+                    class="coming-soon"
+                >
+                    Coming Soon
+                </a>
+
+            </section>
+
+        </main>
+
+
+        <footer>
+            TYPING GAME · DEVELOPMENT HISTORY · 2026
+        </footer>
+
+    </div>
+
+</body>
+</html>
