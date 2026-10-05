@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Typing Game | Version 04</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #25204a 0%,
+                    #11111f 45%,
+                    #080810 100%
+                );
+
+            color: white;
+
+            font-family:
+                "Segoe UI",
+                "Microsoft JhengHei",
+                sans-serif;
+
+            padding: 30px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .version {
+            color: #8f8cff;
+            font-size: 14px;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 40px;
+        }
+
+        .subtitle {
+            color: #aaa9bd;
+            margin-top: 10px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.06);
+
+            border: 1px solid rgba(143, 140, 255, 0.25);
+            border-radius: 20px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 0 40px rgba(104, 92, 255, 0.12),
+                inset 0 0 30px rgba(255, 255, 255, 0.02);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .score-box,
+        .question-box {
+            color: #aaa9bd;
+            font-size: 14px;
+        }
+
+        .score-box strong,
+        .question-box strong {
+            display: block;
+
+            color: white;
+            font-size: 24px;
+
+            margin-top: 4px;
+        }
+
+        .speed-control {
+            margin-bottom: 20px;
+            padding: 15px;
+
+            background: rgba(255, 255, 255, 0.04);
+
+            border-radius: 12px;
+        }
+
+        .speed-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 8px;
+        }
+
+        .speed-label {
+            color: #aaa9bd;
+            font-size: 14px;
+        }
+
+        .speed-value {
+            color: #8f8cff;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #8f8cff;
+            cursor: pointer;
+        }
+
+        .game-area {
+            position: relative;
+
+            width: 100%;
+            height: 430px;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(143, 140, 255, 0.08),
+                    rgba(255, 255, 255, 0.02)
+                );
+
+            border: 1px solid rgba(143, 140, 255, 0.2);
+            border-radius: 15px;
+        }
+
+        .game-line {
+            position: absolute;
+
+            left: 0;
+            bottom: 70px;
+
+            width: 100%;
+            height: 2px;
+
+            background: rgba(143, 140, 255, 0.35);
+        }
+
+        .falling-letter {
+            position: absolute;
+
+            top: -70px;
+
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c6cff,
+                    #a66cff
+                );
+
+            border-radius: 14px;
+
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+
+            box-shadow:
+                0 0 25px rgba(124, 108, 255, 0.5);
+
+            transform: translateX(-50%);
+        }
+
+        .status {
+            text-align: center;
+
+            min-height: 24px;
+
+            margin: 18px 0;
+
+            color: #aaa9bd;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+
+            padding: 12px 25px;
+
+            font-size: 15px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .start-btn {
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c6cff,
+                    #a66cff
+                );
+
+            color: white;
+
+            box-shadow:
+                0 0 18px rgba(124, 108, 255, 0.3);
+        }
+
+        .pause-btn,
+        .stop-btn {
+            background: rgba(255, 255, 255, 0.08);
+
+            border: 1px solid rgba(255, 255, 255, 0.15);
+
+            color: #ccccd8;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            display: none;
+
+            text-align: center;
+
+            margin-top: 20px;
+            padding: 25px;
+
+            background: rgba(143, 140, 255, 0.08);
+
+            border: 1px solid rgba(143, 140, 255, 0.2);
+            border-radius: 15px;
+        }
+
+        .result h2 {
+            margin-top: 0;
+        }
+
+        .result-score {
+            color: #8f8cff;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .back {
+            display: block;
+
+            width: fit-content;
+
+            margin: 25px auto 0;
+
+            color: #8f8cff;
+
+            text-decoration: none;
+
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+
+            margin-top: 25px;
+
+            color: #666579;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 20px 12px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .game-area {
+                height: 380px;
+            }
+
+            .top-bar {
+                gap: 10px;
+            }
+
+            .falling-letter {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header class="header">
+
+            <div class="version">
+                TYPING GAME · VERSION 04
+            </div>
+
+            <h1>十鍵掉落挑戰</h1>
+
+            <p class="subtitle">
+                Press the correct key before the letter reaches the bottom.
+            </p>
+
+        </header>
+
+
+        <main class="game-card">
+
+            <div class="top-bar">
+
+                <div class="score-box">
+                    SCORE
+                    <strong id="score">0</strong>
+                </div>
+
+                <div class="question-box">
+                    QUESTION
+                    <strong>
+                        <span id="question">0</span> / 10
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="speed-control">
+
+                <div class="speed-row">
+
+                    <span class="speed-label">
+                        掉落速度
+                    </span>
+
+                    <span
+                        class="speed-value"
+                        id="speedValue"
+                    >
+                        8 秒
+                    </span>
+
+                </div>
+
+                <input
+                    type="range"
+                    id="speedSlider"
+                    min="3"
+                    max="14"
+                    value="8"
+                >
+
+            </div>
+
+
+            <div
+                class="game-area"
+                id="gameArea"
+            >
+
+                <div class="game-line"></div>
+
+            </div>
+
+
+            <div
+                class="status"
+                id="status"
+            >
+                按下「開始遊戲」開始挑戰
+            </div>
+
+
+            <div class="buttons">
+
+                <button
+                    class="start-btn"
+                    id="startButton"
+                >
+                    開始遊戲
+                </button>
+
+                <button
+                    class="pause-btn"
+                    id="pauseButton"
+                >
+                    暫停
+                </button>
+
+                <button
+                    class="stop-btn"
+                    id="stopButton"
+                >
+                    停止
+                </button>
+
+            </div>
+
+
+            <div
+                class="result"
+                id="result"
+            >
+
+                <h2>遊戲完成！</h2>
+
+                <div
+                    class="result-score"
+                    id="resultScore"
+                >
+                    0 / 10
+                </div>
+
+                <p>
+                    恭喜完成本回合挑戰！
+                </p>
+
+            </div>
+
+        </main>
+
+
+        <a
+            href="../index.html"
+            class="back"
+        >
+            ← 回到開發歷程
+        </a>
+
+
+        <footer>
+            VERSION 04 · 2026
+        </footer>
+
+    </div>
+
+
+    <script>
+
+        const letters = [
+            "A",
+            "S",
+            "D",
+            "F",
+            "G",
+            "H",
+            "J",
+            "K",
+            "L",
+            ";"
+        ];
+
+
+        const gameArea =
+            document.getElementById("gameArea");
+
+        const scoreElement =
+            document.getElementById("score");
+
+        const questionElement =
+            document.getElementById("question");
+
+        const statusElement =
+            document.getElementById("status");
+
+        const speedSlider =
+            document.getElementById("speedSlider");
+
+        const speedValue =
+            document.getElementById("speedValue");
+
+        const startButton =
+            document.getElementById("startButton");
+
+        const pauseButton =
+            document.getElementById("pauseButton");
+
+        const stopButton =
+            document.getElementById("stopButton");
+
+        const resultElement =
+            document.getElementById("result");
+
+        const resultScoreElement =
+            document.getElementById("resultScore");
+
+
+        let score = 0;
+        let question = 0;
+
+        let currentLetter = null;
+
+        let gameRunning = false;
+        let paused = false;
+
+        let fallingElement = null;
+
+        let animationFrame = null;
+
+        let lastTime = 0;
+        let fallProgress = 0;
+
+        let currentFallDuration = 8;
+
+
+        function getRandomLetter() {
+
+            const randomIndex =
+                Math.floor(
+                    Math.random() * letters.length
+                );
+
+            return letters[randomIndex];
+
+        }
+
+
+        function updateSpeedDisplay() {
+
+            speedValue.textContent =
+                speedSlider.value + " 秒";
+
+        }
+
+
+        function calculateFallDuration() {
+
+            const baseSpeed =
+                Number(speedSlider.value);
+
+            const acceleration =
+                Math.floor(score / 3);
+
+            return Math.max(
+                3,
+                baseSpeed - acceleration
+            );
+
+        }
+
+
+        function createLetter() {
+
+            if (!gameRunning || paused) {
+                return;
+            }
+
+            currentLetter =
+                getRandomLetter();
+
+            fallingElement =
+                document.createElement("div");
+
+            fallingElement.className =
+                "falling-letter";
+
+            fallingElement.textContent =
+                currentLetter;
+
+            const areaWidth =
+                gameArea.clientWidth;
+
+            const sideMargin = 35;
+
+            const randomX =
+                sideMargin +
+                Math.random() *
+                (areaWidth - sideMargin * 2);
+
+            fallingElement.style.left =
+                randomX + "px";
+
+            fallingElement.style.top =
+                "-70px";
+
+            gameArea.appendChild(
+                fallingElement
+            );
+
+            fallProgress = 0;
+
+            currentFallDuration =
+                calculateFallDuration();
+
+            lastTime =
+                performance.now();
+
+            animationFrame =
+                requestAnimationFrame(
+                    updateFall
+                );
+
+        }
+
+
+        function updateFall(timestamp) {
+
+            if (!gameRunning) {
+                return;
+            }
+
+            if (paused) {
+                lastTime = timestamp;
+
+                animationFrame =
+                    requestAnimationFrame(
+                        updateFall
+                    );
+
+                return;
+            }
+
+            const delta =
+                (timestamp - lastTime) / 1000;
+
+            lastTime = timestamp;
+
+            fallProgress +=
+                delta / currentFallDuration;
+
+            const startY = -70;
+
+            const endY =
+                gameArea.clientHeight - 55;
+
+            const currentY =
+                startY +
+                (endY - startY) *
+                fallProgress;
+
+            if (fallingElement) {
+
+                fallingElement.style.top =
+                    currentY + "px";
+
+            }
+
+
+            if (fallProgress >= 1) {
+
+                handleMiss();
+
+                return;
+
+            }
+
+
+            animationFrame =
+                requestAnimationFrame(
+                    updateFall
+                );
+
+        }
+
+
+        function handleMiss() {
+
+            if (!fallingElement) {
+                return;
+            }
+
+            fallingElement.remove();
+
+            fallingElement = null;
+
+            currentLetter = null;
+
+            question++;
+
+            questionElement.textContent =
+                question;
+
+            statusElement.textContent =
+                "沒接到，再來一題！";
+
+
+            if (question >= 10) {
+
+                finishGame();
+
+                return;
+
+            }
+
+
+            createLetter();
+
+        }
+
+
+        function handleCorrect() {
+
+            if (!fallingElement) {
+                return;
+            }
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+            fallingElement.remove();
+
+            fallingElement = null;
+
+            score++;
+
+            question++;
+
+            scoreElement.textContent =
+                score;
+
+            questionElement.textContent =
+                question;
+
+            statusElement.textContent =
+                "答對了！";
+
+            currentLetter = null;
+
+
+            if (question >= 10) {
+
+                finishGame();
+
+                return;
+
+            }
+
+
+            createLetter();
+
+        }
+
+
+        function handleKeyPress(event) {
+
+            if (!gameRunning || paused) {
+                return;
+            }
+
+            const pressedKey =
+                event.key.toUpperCase();
+
+            if (
+                !letters.includes(
+                    pressedKey
+                )
+            ) {
+                return;
+            }
+
+
+            if (
+                pressedKey === currentLetter
+            ) {
+
+                handleCorrect();
+
+            }
+
+        }
+
+
+        function startGame() {
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+            if (fallingElement) {
+                fallingElement.remove();
+            }
+
+            score = 0;
+            question = 0;
+
+            scoreElement.textContent =
+                "0";
+
+            questionElement.textContent =
+                "0";
+
+            resultElement.style.display =
+                "none";
+
+            gameRunning = true;
+            paused = false;
+
+            pauseButton.textContent =
+                "暫停";
+
+            statusElement.textContent =
+                "遊戲開始！";
+
+            createLetter();
+
+        }
+
+
+        function pauseGame() {
+
+            if (!gameRunning) {
+                return;
+            }
+
+            paused = !paused;
+
+            if (paused) {
+
+                pauseButton.textContent =
+                    "繼續";
+
+                statusElement.textContent =
+                    "遊戲已暫停";
+
+            } else {
+
+                pauseButton.textContent =
+                    "暫停";
+
+                statusElement.textContent =
+                    "繼續挑戰！";
+
+                lastTime =
+                    performance.now();
+
+            }
+
+        }
+
+
+        function stopGame() {
+
+            gameRunning = false;
+            paused = false;
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+            if (fallingElement) {
+                fallingElement.remove();
+            }
+
+            fallingElement = null;
+            currentLetter = null;
+
+            pauseButton.textContent =
+                "暫停";
+
+            statusElement.textContent =
+                "遊戲已停止";
+
+        }
+
+
+        function finishGame() {
+
+            gameRunning = false;
+            paused = false;
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+            if (fallingElement) {
+                fallingElement.remove();
+            }
+
+            fallingElement = null;
+            currentLetter = null;
+
+            resultScoreElement.textContent =
+                score + " / 10";
+
+            resultElement.style.display =
+                "block";
+
+            statusElement.textContent =
+                "本回合完成！";
+
+        }
+
+
+        function handleWindowBlur() {
+
+            if (
+                gameRunning &&
+                !paused
+            ) {
+
+                paused = true;
+
+                pauseButton.textContent =
+                    "繼續";
+
+                statusElement.textContent =
+                    "視窗離開，遊戲已自動暫停";
+
+            }
+
+        }
+
+
+        speedSlider.addEventListener(
+            "input",
+            updateSpeedDisplay
+        );
+
+
+        startButton.addEventListener(
+            "click",
+            startGame
+        );
+
+
+        pauseButton.addEventListener(
+            "click",
+            pauseGame
+        );
+
+
+        stopButton.addEventListener(
+            "click",
+            stopGame
+        );
+
+
+        document.addEventListener(
+            "keydown",
+            handleKeyPress
+        );
+
+
+        window.addEventListener(
+            "blur",
+            handleWindowBlur
+        );
+
+
+        updateSpeedDisplay();
+
+    </script>
+
+</body>
+</html>
